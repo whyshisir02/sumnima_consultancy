@@ -1,0 +1,28 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+.vercel/
+.turbo/
+.env*
+!.env.example
+test-results/
+playwright-report/
+coverage/
+*.tsbuildinfo
+
+# Runtime and package-manager logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS and editor-generated files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
