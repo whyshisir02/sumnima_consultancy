@@ -1,37 +1,33 @@
 # Where to edit website content
 
-Use this folder for page data and published business content. Components in `src/components/` control how that content looks and behaves.
+Keep page copy and published business content in this folder. Components in `src/components/` control presentation.
 
-## Page data
+## Projects and gallery
+
+- `pages/projects.ts` contains project case studies. Every project gets a detail page at `/en/projects/<slug>/` and `/ne/projects/<slug>/`.
+- `pages/gallery.ts` contains individual gallery photos and captions. Each photo can optionally link back to a project using `projectSlug`.
+
+### Add a project
+
+1. Put approved, optimized project photos in `public/images/projects/`.
+2. Add an object to the `projects` array in `pages/projects.ts`.
+3. Set a unique URL-safe `slug` and fill in the title, category, location, cover image, summary, brief, approach and services in both languages.
+4. Add gallery entries with the same `projectSlug` for any other approved images from the project. The detail page will show them automatically.
+
+Use `/images/projects/your-photo.webp` as the path in the content file; omit `public` from the URL.
+
+### Add a gallery photo
+
+1. Put the approved, optimized photo in `public/images/gallery/`.
+2. Add an object to the `galleryImages` array in `pages/gallery.ts`, including a unique `id`, title, category, location, image path and descriptive alt text in both languages.
+3. Set `projectSlug` if the image belongs to a project; leave it out if it is a general photo.
+
+The current portfolio text and Unsplash photos are fictional preview examples. Replace them with accurate, approved content when it is ready to publish.
+
+## Other page content
 
 - `pages/navigation.ts` — English and Nepali navigation labels.
-- `pages/metadata.ts` — search-result descriptions for each page.
-- `pages/services.ts` — service titles, summaries, detail copy and bullet points in English and Nepali.
-- `pages/projects.ts` — the project portfolio used by Projects, Gallery and the homepage.
+- `pages/metadata.ts` — search-result descriptions.
+- `pages/services.ts` — service copy in English and Nepali.
 
-Each page has its own Next.js route in `src/app/[lang]/` and its own content component under `src/features/pages/`. For example, edit `src/features/pages/about/page.tsx` for the About page layout. Shared header, footer and page sections are in `src/components/`. `src/components/site.tsx` assembles each page inside the shared site frame. The interactive navigation, enquiry form and gallery lightbox are in `src/components/interactive.tsx`.
-
-## Add a project or gallery item
-
-1. Put client-approved, web-optimised images in `public/images/projects/`.
-2. Open `pages/projects.ts` and add one object to the `portfolio` array.
-3. Fill in every English and Nepali title, category, location and descriptive image alt text. Keep the `id` unique and use a leading slash for the image path.
-4. Add additional images from the same project as additional objects if they should appear separately in the Gallery.
-
-Example:
-
-```ts
-{
-  id: "sample-home-exterior",
-  title: { en: "Sample home exterior", ne: "नमूना घरको बाहिरी भाग" },
-  category: { en: "Building Design", ne: "भवन डिजाइन" },
-  location: { en: "Dharan", ne: "धरान" },
-  image: "/images/projects/sample-home.webp",
-  alt: {
-    en: "Front exterior of a two-storey home in Dharan",
-    ne: "धरानस्थित दुई तले घरको अगाडिको दृश्य",
-  },
-}
-```
-
-The Projects page and Gallery read from the same portfolio list. The homepage automatically features its first three items. Keep this array empty until approved project information and real images are available; the site then shows the portfolio coming-soon state.
+Each route is under `src/app/[lang]/`, with page layouts under `src/features/pages/`. Shared site layout and page sections live in `src/components/`.

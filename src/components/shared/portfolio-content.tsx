@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { href, type Lang } from "@/lib/config";
-import { portfolio } from "@/content/pages/projects";
+import { projects } from "@/content/pages/projects";
+import { galleryImages } from "@/content/pages/gallery";
 import { EmptyPortfolio, t } from "@/components/shared/site-sections";
 import { GalleryGrid } from "@/components/interactive";
+import { ProjectGrid } from "@/components/shared/project-grid";
 
 export function PortfolioContent({
   lang,
@@ -14,11 +16,11 @@ export function PortfolioContent({
 }) {
   return (
     <section className="section container portfolio-section">
-      {portfolio.length ? (
-        <GalleryGrid items={portfolio} lang={lang} />
-      ) : (
-        <EmptyPortfolio lang={lang} gallery={gallery} />
-      )}
+      {gallery ? (
+        galleryImages.length ? (
+          <GalleryGrid items={galleryImages} lang={lang} />
+        ) : <EmptyPortfolio lang={lang} gallery />
+      ) : projects.length ? <ProjectGrid items={projects} lang={lang} /> : <EmptyPortfolio lang={lang} />}
       <div className="portfolio-help">
         <h2>
           {t(

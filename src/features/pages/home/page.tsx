@@ -9,9 +9,11 @@ import {
   DraftingCompass,
 } from "lucide-react";
 import { href, type Lang } from "@/lib/config";
-import { portfolio } from "@/content/pages/projects";
+import { projects } from "@/content/pages/projects";
+import { galleryImages } from "@/content/pages/gallery";
 import { services } from "@/content/pages/services";
 import { GalleryGrid } from "@/components/interactive";
+import { ProjectGrid } from "@/components/shared/project-grid";
 import {
   AboutPreview,
   EmptyPortfolio,
@@ -187,11 +189,24 @@ export function Home({ lang }: { lang: Lang }) {
             <ArrowUpRight size={17} />
           </Link>
         </div>
-        {portfolio.length ? (
-          <GalleryGrid items={portfolio.slice(0, 3)} lang={lang} />
+        {projects.length ? (
+          <ProjectGrid items={projects.slice(0, 3)} lang={lang} />
         ) : (
           <EmptyPortfolio lang={lang} />
         )}
+      </section>
+      <section className="section container home-gallery-preview">
+        <div className="section-heading">
+          <div>
+            <Eyebrow>{t(lang, "DETAILS & MOMENTS", "विवरण र झलकहरू")}</Eyebrow>
+            <h2>{t(lang, "A closer look.", "अझ नजिकबाट हेर्नुहोस्।")}</h2>
+          </div>
+          <Link href={href(lang, "gallery")} className="text-link">
+            {t(lang, "Open the gallery", "ग्यालरी खोल्नुहोस्")}
+            <ArrowUpRight size={17} />
+          </Link>
+        </div>
+        <GalleryGrid items={galleryImages.slice(0, 3)} lang={lang} />
       </section>
       <Process lang={lang} />
       <section className="contact-preview container">

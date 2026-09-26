@@ -6,7 +6,15 @@ import { Navigation } from "@/components/interactive";
 import { Brand } from "@/components/layout/footer";
 import { t } from "@/components/shared/site-sections";
 
-export function SiteHeader({ lang, page }: { lang: Lang; page: Page }) {
+export function SiteHeader({
+  lang,
+  page,
+  languageHref,
+}: {
+  lang: Lang;
+  page: Page;
+  languageHref?: string;
+}) {
   return (
     <>
       <div className="topbar">
@@ -55,7 +63,7 @@ export function SiteHeader({ lang, page }: { lang: Lang; page: Page }) {
               </Link>
             ))}
           </nav>
-          <Navigation lang={lang} page={page} />
+          <Navigation lang={lang} page={page} languageHref={languageHref} />
         </div>
       </header>
     </>

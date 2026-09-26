@@ -11,6 +11,8 @@ test("all bilingual pages render and language switching preserves the page", asy
       "services/",
       "projects/",
       "gallery/",
+      "projects/family-home-dharan/",
+      "projects/calm-cafe-interior/",
       "contact/",
       "privacy/",
     ]) {
@@ -29,6 +31,39 @@ test("all bilingual pages render and language switching preserves the page", asy
   await expect(page).toHaveURL(/\/ne\/services\//);
   await expect(page.locator("h1")).toContainText("सेवाहरू");
   expect(errors).toEqual([]);
+});
+test("projects open case studies while the gallery shows separate photos", async ({ page }) => {
+  await page.goto("/en/projects/");
+  await expect(page.locator(".project-card")).toHaveCount(2);
+  await page.getByRole("link", { name: /Explore project/ }).first().click();
+  await expect(page).toHaveURL(/\/en\/projects\/family-home-dharan\//);
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Family Home");
+  await expect(page.getByRole("heading", { name: "The brief" })).toBeVisible();
+  await expect(page.locator(".project-photo-grid figure")).toHaveCount(2);
+  await page.getByRole("link", { name: "Switch to Nepali" }).click();
+  await expect(page).toHaveURL(/\/ne\/projects\/family-home-dharan\//);
+  await page.goto("/en/gallery/");
+  await expect(page.locator(".gallery-item")).toHaveCount(5);
+  await expect(page.getByRole("link", { name: "View project" }).first()).toBeVisible();
+});
+test("project and gallery thumbnails stay compact on desktop and mobile", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/en/projects/");
+  const projectHeights = await page.locator(".project-card-image img").evaluateAll((images) =>
+    images.map((image) => image.getBoundingClientRect().height),
+  );
+  expect(projectHeights.every((height) => height <= 240)).toBe(true);
+  await page.goto("/en/gallery/");
+  const galleryHeights = await page.locator(".gallery-item img").evaluateAll((images) =>
+    images.map((image) => image.getBoundingClientRect().height),
+  );
+  expect(galleryHeights.every((height) => height <= 190)).toBe(true);
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/en/projects/");
+  await expect.poll(() => page.locator(".project-card-image img").first().evaluate((image) => image.getBoundingClientRect().height)).toBeLessThanOrEqual(200);
+  await page.goto("/en/gallery/");
+  await expect.poll(() => page.locator(".gallery-item img").first().evaluate((image) => image.getBoundingClientRect().height)).toBeLessThanOrEqual(160);
 });
 test("WhatsApp enquiry validates inputs and prepares the confirmed destination", async ({
   page,
@@ -96,6 +131,12 @@ test("mobile navigation, layout, images, and screenshots", async ({ page }) => {
     }
   await page.goto("/en/");
   for (const img of await page.locator("img").all()) {
+    const src = await img.getAttribute("src");
+    await expect(img).toHaveAttribute("alt", /.+/);
+    expect(src).toBeTruthy();
+    // Third-party preview images are intentionally remote; avoid making this
+    // test depend on external network availability.
+    if (src?.startsWith("http")) continue;
     await img.scrollIntoViewIfNeeded();
     await expect
       .poll(() =>

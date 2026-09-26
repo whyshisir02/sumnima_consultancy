@@ -20,9 +20,17 @@ import {
 } from "@/lib/config";
 import { labels } from "@/content/pages/navigation";
 import { services } from "@/content/pages/services";
-import type { PortfolioItem } from "@/content/pages/projects";
+import type { GalleryImage } from "@/content/pages/gallery";
 
-export function Navigation({ lang, page }: { lang: Lang; page: Page }) {
+export function Navigation({
+  lang,
+  page,
+  languageHref,
+}: {
+  lang: Lang;
+  page: Page;
+  languageHref?: string;
+}) {
   const [open, setOpen] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -40,7 +48,7 @@ export function Navigation({ lang, page }: { lang: Lang; page: Page }) {
       <div className="header-actions">
         <Link
           className="language"
-          href={href(lang === "en" ? "ne" : "en", page)}
+          href={languageHref ?? href(lang === "en" ? "ne" : "en", page)}
           lang={lang === "en" ? "ne" : "en"}
           aria-label={lang === "en" ? "Switch to Nepali" : "Switch to English"}
         >
@@ -287,7 +295,7 @@ export function GalleryGrid({
   items,
   lang,
 }: {
-  items: PortfolioItem[];
+  items: GalleryImage[];
   lang: Lang;
 }) {
   const [index, setIndex] = useState<number | null>(null);
@@ -335,26 +343,34 @@ export function GalleryGrid({
       </div>
       <div className="gallery-grid">
         {filtered.map((p, i) => (
-          <button
-            className="gallery-item"
-            key={p.id}
-            onClick={() => setIndex(i)}
-          >
-            <img
-              src={p.image}
-              alt={p.alt[lang]}
-              width={800}
-              height={600}
-              loading="lazy"
-            />
-            <span>
-              {p.title[lang]}
-              <ArrowUpRight size={20} />
-            </span>
-            <small>
-              {p.category[lang]} · {p.location[lang]}
-            </small>
-          </button>
+          <article className="gallery-item" key={p.id}>
+            <button
+              className="gallery-image-button"
+              onClick={() => setIndex(i)}
+              aria-label={p.alt[lang]}
+            >
+              <img
+                src={p.image}
+                alt={p.alt[lang]}
+                width={800}
+                height={600}
+                loading="lazy"
+              />
+              <span>
+                {p.title[lang]}
+                <ArrowUpRight size={20} />
+              </span>
+              <small>
+                {p.category[lang]} · {p.location[lang]}
+              </small>
+            </button>
+            {p.projectSlug && (
+              <Link className="text-link gallery-project-link" href={`/${lang}/projects/${p.projectSlug}/`}>
+                {lang === "en" ? "View project" : "परियोजना हेर्नुहोस्"}
+                <ArrowUpRight size={16} />
+              </Link>
+            )}
+          </article>
         ))}
       </div>
       <dialog
